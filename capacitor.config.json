@@ -1,0 +1,12 @@
+{
+  "appId": "com.mm.memories",
+  "appName": "M❤️M",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#3d0512"
+  }
+}
