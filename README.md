@@ -49,16 +49,50 @@ python3 -m http.server 8000
 | الأغنية | استبدل `audio/our-song.mp3` بأغنيتكما |
 | أيقونة التطبيق | استبدل `photos/memory-20.jpg` وأعد توليد `icon/` (أو أخبرني) |
 
+## 📱 التحويل إلى تطبيق أندرويد (APK)
+
+التطبيق **جاهز للتحويل** — هو تطبيق ويب ثابت بكل ملفاته محلية (صور، أغنية، أيقونات)،
+ومع `manifest.webmanifest` و `capacitor.config.json` المرفقين، يمكن تحويله إلى APK بثلاث طرق:
+
+### الطريقة 1 (الأسهل — بدون أي برمجة) 🌟
+استخدم موقعاً يحوّل ملفات الويب إلى APK مثل:
+- **WebIntoApp** — webintoapp.com (ارفع ملف `index.html` + المجلدات، أو رابطاً)
+- **Website 2 APK** — websiteseotools.com أو appsgeyser.com
+
+ارفع ملفات المشروع (أو الرابط إن نشرت التطبيق على GitHub Pages) وستحصل على APK جاهز.
+
+### الطريقة 2 (الاحترافية — Capacitor)
+يتطلب تثبيت [Node.js](https://nodejs.org) و[Android Studio](https://developer.android.com/studio):
+
+```bash
+npm install @capacitor/core @capacitor/cli
+npx cap add android
+npx cap sync android
+npx cap open android   # ثم: Build → Build APK
+```
+
+سيُنشئ مجلد `android/` وتستطيع بناء APK من Android Studio مباشرة.
+
+### الطريقة 3 (بدون APK — تثبيت من المتصفح)
+افتح التطبيق في كروم على هاتف أندرويد → القائمة ⋮ → **إضافة إلى الشاشة الرئيسية**.
+سيُثبَّت كتطبيق مستقل (بفضل `manifest.webmanifest` والأيقونات) بدون حاجة لأي تحويل.
+
+> 💡 ملاحظة: الموسيقى تعمل تلقائياً في تطبيق الأندرويد (WebView يسمح بالتشغيل التلقائي).
+
 ## 🗂️ بنية المشروع
 
 ```
-├── index.html        ← الصفحة الرئيسية (الهيكل + رسالة الحب + مشغل الموسيقى)
-├── css/style.css     ← التصميم الرومانسي الكامل
-├── js/data.js        ← ⭐ البيانات: 49 ذكرة مع الصور والتواريخ
-├── js/main.js        ← منطق التطبيق: القلوب، الخط الزمني، المعرض، الرسالة، الموسيقى
-├── photos/           ← صوركما الأصلية (memory-01.jpg … memory-49.jpg)
-│   └── thumbs/       ← نسخ مصغّرة للعرض السريع
-└── audio/our-song.mp3 ← أغنيتكما
+├── index.html                ← الصفحة الرئيسية (الهيكل + رسالة الحب + مشغل الموسيقى)
+├── manifest.webmanifest      ← ملف PWA (لتثبيت التطبيق + الأيقونات)
+├── capacitor.config.json     ← إعداد تحويل APK عبر Capacitor
+├── package.json              ← أوامر Capacitor المساعدة
+├── css/style.css             ← التصميم الرومانسي الكامل
+├── js/data.js                ← ⭐ البيانات: 49 ذكرة مع الصور والتواريخ والألبومات
+├── js/main.js                ← منطق التطبيق: القلوب، الخط الزمني، المعرض، الألبومات، الموسيقى
+├── photos/                   ← صوركما الأصلية (memory-01.jpg … memory-49.jpg)
+│   └── thumbs/               ← نسخ مصغّرة للعرض السريع
+├── icon/                     ← أيقونات التطبيق (من أجمل صورتكما)
+└── audio/our-song.mp3        ← أغنيتكما
 ```
 
 ## 🎨 المزايا

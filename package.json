@@ -1,0 +1,12 @@
+{
+  "name": "mm-memories-app",
+  "version": "1.0.0",
+  "description": "تطبيق ذكرياتنا M❤️M — تطبيق ويب رومانسي للصور والذكريات",
+  "private": true,
+  "scripts": {
+    "build": "echo 'التطبيق ثابت (HTML/CSS/JS) — لا حاجة لبناء'",
+    "cap:add": "npx cap add android",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android"
+  }
+}
