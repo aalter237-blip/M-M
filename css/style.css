@@ -64,25 +64,36 @@ img { display: block; max-width: 100%; }
 }
 .monogram .amp { font-size: .62em; color: var(--rose-soft); }
 
-.intro-title {
+.intro-kicker {
   font-family: var(--font-head);
-  font-size: clamp(3.2rem, 11vw, 6.5rem);
-  font-weight: 700;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  color: var(--rose-soft);
+  letter-spacing: .18em;
+  margin-bottom: .5rem;
+  text-shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+
+.intro-title {
+  font-family: var(--font-script);
+  font-size: clamp(3.6rem, 13vw, 7.5rem);
+  font-weight: 400;
   color: transparent;
-  background: linear-gradient(180deg, #fff 20%, var(--gold-soft) 60%, var(--gold) 100%);
+  background: linear-gradient(180deg, #fff 15%, var(--gold-soft) 55%, var(--gold) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   filter: drop-shadow(0 6px 22px rgba(0,0,0,.35));
   margin-bottom: .6rem;
   position: relative;
+  line-height: 1.15;
 }
+.intro-title .amp { font-size: .9em; }
 .intro-title::after {
   content: '❦';
   position: absolute;
-  bottom: -1.4rem;
+  bottom: -1.2rem;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   color: var(--rose-soft);
   opacity: .85;
 }
@@ -159,13 +170,47 @@ img { display: block; max-width: 100%; }
   100% { transform: translateY(-115vh) translateX(var(--drift, 30px)) rotate(14deg) scale(1.15); opacity: 0; }
 }
 
+/* ============ خلفية الأسماء المتساقطة ============ */
+.names-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+#intro .names-field {
+  position: absolute;
+  z-index: 1;
+}
+
+.floating-name {
+  position: absolute;
+  top: -12vh;
+  font-family: var(--font-head);
+  font-weight: 700;
+  color: var(--rose);
+  white-space: nowrap;
+  opacity: 0;
+  text-shadow: 0 2px 14px rgba(92,10,30,.18);
+  animation: nameFall linear forwards;
+  will-change: transform, opacity;
+}
+#intro .floating-name { color: var(--gold-soft); text-shadow: 0 2px 14px rgba(0,0,0,.35); }
+
+@keyframes nameFall {
+  0%   { transform: translateY(-12vh) rotate(-5deg); opacity: 0; }
+  8%   { opacity: var(--name-op, .14); }
+  88%  { opacity: var(--name-op, .14); }
+  100% { transform: translateY(112vh) rotate(6deg); opacity: 0; }
+}
+
 /* ============ الأقسام العامة ============ */
-.section { padding: clamp(4rem, 9vw, 7rem) 1.2rem; position: relative; }
+.section { padding: clamp(4rem, 9vw, 7rem) 1.2rem; position: relative; z-index: 1; }
 
 .section-alt {
   background:
     radial-gradient(900px 500px at 0% 0%, rgba(201,111,132,.10), transparent 60%),
-    var(--blush);
+    rgba(248, 231, 234, .45);
 }
 
 .section-head { text-align: center; max-width: 640px; margin: 0 auto 3.5rem; }
@@ -474,13 +519,13 @@ img { display: block; max-width: 100%; }
   top: 52%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 72px; height: 72px;
+  width: 76px; height: 76px;
   border-radius: 50%;
   border: 3px solid var(--gold-soft);
   background: radial-gradient(circle at 35% 30%, #e0536e, var(--wine-2) 70%);
   color: var(--gold-soft);
   font-family: var(--font-script);
-  font-size: 1.05rem;
+  font-size: .92rem;
   cursor: pointer;
   box-shadow: 0 8px 22px rgba(0,0,0,.4), inset 0 2px 6px rgba(255,255,255,.25);
   transition: transform .3s ease, box-shadow .3s ease;

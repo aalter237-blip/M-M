@@ -10,6 +10,25 @@
 
   const HEART_EMOJIS = ['❤️', '💗', '💕', '🌹', '💖', '🌷', '💘', '✨'];
 
+  /* أسماء تتساقط في الخلفية */
+  const FALLING_NAMES = ['مزن', 'محمد', 'وتيني', 'نبضي'];
+
+  function spawnName(field, onDark) {
+    const s = document.createElement('span');
+    s.className = 'floating-name';
+    s.textContent = FALLING_NAMES[Math.floor(Math.random() * FALLING_NAMES.length)];
+    s.style.left = (Math.random() * 96) + '%';
+    s.style.fontSize = (1.1 + Math.random() * 2.1) + 'rem';
+    const op = onDark
+      ? 0.16 + Math.random() * 0.14
+      : 0.09 + Math.random() * 0.10;
+    s.style.setProperty('--name-op', op.toFixed(2));
+    s.style.animationDuration = (10 + Math.random() * 10) + 's';
+    s.style.animationDelay = (Math.random() * 5) + 's';
+    field.appendChild(s);
+    setTimeout(() => s.remove(), 26000);
+  }
+
   /* ---------- عدّاد الأيام ---------- */
   function daysSince(dateStr) {
     const start = new Date(dateStr + 'T00:00:00');
@@ -194,6 +213,11 @@
     for (let i = 0; i < 10; i++) setTimeout(() => spawnHeart(field), i * 250);
     setInterval(() => spawnHeart(field), 1600);
 
+    // أسماء متساقطة على شاشة البداية
+    const introNames = $('.intro-names');
+    for (let i = 0; i < 14; i++) setTimeout(() => spawnName(introNames, true), i * 350);
+    setInterval(() => spawnName(introNames, true), 1900);
+
     // عدّاد الأيام
     const days = daysSince(APP_CONFIG.startDate);
     animateNumber($('#daysCount'), days);
@@ -225,5 +249,10 @@
     initIntro();
     initReveal();
     initMusic();
+
+    // أسماء متساقطة في خلفية كامل التطبيق
+    const bgNames = $('#bgNames');
+    for (let i = 0; i < 10; i++) setTimeout(() => spawnName(bgNames, false), i * 450);
+    setInterval(() => spawnName(bgNames, false), 2400);
   });
 })();
