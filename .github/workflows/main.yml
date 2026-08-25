@@ -29,6 +29,14 @@ jobs:
         run: |
           npm install @capacitor/core@^6 @capacitor/cli@^6 @capacitor/android@^6
 
+      - name: تجهيز مجلد www وتعديل الإعدادات
+        run: |
+          mkdir -p www
+          cp -r index.html css js photos icon audio manifest.webmanifest www/
+          # تصحيح webDir لأن "." غير مسموح
+          sed -i 's/"webDir": "."/"webDir": "www"/' capacitor.config.json
+          cp capacitor.config.json www/
+
       - name: إضافة منصة أندرويد
         run: npx cap add android
 
@@ -36,12 +44,12 @@ jobs:
         run: |
           rm -rf android/app/src/main/assets/public
           mkdir -p android/app/src/main/assets/public
-          cp -r index.html css js photos icon audio manifest.webmanifest capacitor.config.json android/app/src/main/assets/public/
+          cp -r www/* android/app/src/main/assets/public/
 
       - name: استبدال أيقونات التطبيق بأيقونة M❤️M
         run: |
-          rm -f android/app/src/main/res/mipmap-anydpi-v26/*.xml
-          cp -r resources/android/mipmap-*/ android/app/src/main/res/
+          rm -f android/app/src/main/res/mipmap-anydpi-v26/*.xml || true
+          cp -r resources/android/mipmap-*/ android/app/src/main/res/ || true
 
       - name: بناء APK (Debug)
         run: |
