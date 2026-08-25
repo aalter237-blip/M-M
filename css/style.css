@@ -21,12 +21,23 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* منع انزلاق/تحرك الشاشة يميناً ويساراً نهائياً */
+  overflow-x: hidden;
+  overflow-x: clip;
+  width: 100%;
+}
 
 body {
   font-family: var(--font-body);
   color: var(--ink);
   overflow-x: hidden;
+  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  overscroll-behavior-x: none;
   line-height: 1.9;
   background:
     radial-gradient(1200px 800px at 85% -5%, rgba(201,111,132,.10), transparent 55%),
@@ -200,6 +211,14 @@ img { display: block; max-width: 100%; }
   will-change: transform, opacity;
 }
 #intro .floating-name { color: var(--gold-soft); text-shadow: 0 2px 14px rgba(0,0,0,.35); }
+
+/* إيموجيهات الحب المتساقطة مع الأسماء */
+.floating-name.floating-emoji {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Segoe UI', sans-serif;
+  filter: drop-shadow(0 3px 10px rgba(201, 111, 132, .45));
+  will-change: transform, opacity, filter;
+}
+#intro .floating-emoji { filter: drop-shadow(0 3px 12px rgba(212, 175, 55, .5)); }
 
 @keyframes nameFall {
   0%   { transform: translateY(-12vh) rotate(-5deg); opacity: 0; }

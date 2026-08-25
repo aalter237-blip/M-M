@@ -13,15 +13,23 @@
   /* أسماء تتساقط في الخلفية */
   const FALLING_NAMES = ['مزن', 'محمد', 'وتيني', 'نبضي'];
 
+  /* إيموجيهات حب تتساقط مع الأسماء */
+  const FALLING_EMOJIS = ['❤️', '💗', '💕', '💖', '💘', '💝', '💞', '🌹', '💌', '🥰', '😍', '🌷', '💓', '💞'];
+
   function spawnName(field, onDark) {
     const s = document.createElement('span');
-    s.className = 'floating-name';
-    s.textContent = FALLING_NAMES[Math.floor(Math.random() * FALLING_NAMES.length)];
+    // نمزج بين الأسماء وإيموجيهات الحب المتساقطة
+    const isEmoji = Math.random() < 0.45;
+    s.className = isEmoji ? 'floating-name floating-emoji' : 'floating-name';
+    s.textContent = isEmoji
+      ? FALLING_EMOJIS[Math.floor(Math.random() * FALLING_EMOJIS.length)]
+      : FALLING_NAMES[Math.floor(Math.random() * FALLING_NAMES.length)];
     s.style.left = (Math.random() * 96) + '%';
     s.style.fontSize = (1.1 + Math.random() * 2.1) + 'rem';
-    const op = onDark
-      ? 0.16 + Math.random() * 0.14
-      : 0.09 + Math.random() * 0.10;
+    // الإيموجيهات أكثر وضوحاً من الأسماء
+    const op = isEmoji
+      ? (onDark ? 0.55 + Math.random() * 0.3 : 0.30 + Math.random() * 0.22)
+      : (onDark ? 0.16 + Math.random() * 0.14 : 0.09 + Math.random() * 0.10);
     s.style.setProperty('--name-op', op.toFixed(2));
     s.style.animationDuration = (10 + Math.random() * 10) + 's';
     s.style.animationDelay = (Math.random() * 5) + 's';
@@ -277,6 +285,35 @@
     audio.addEventListener('ended', () => setPlayingUI(false));
   }
 
+  /* ---------- إيقاف الموسيقى عند الخروج من التطبيق ---------- */
+  function initAppLifecycle() {
+    const pauseAudio = () => {
+      if (!audio.paused) {
+        audio.pause();
+        setPlayingUI(false);
+      }
+    };
+    // عند إخفاء التطبيق أو الذهاب للخلفية (يشمل تطبيق أندرويد عبر Capacitor)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) pauseAudio();
+    });
+    window.addEventListener('pagehide', pauseAudio);
+    window.addEventListener('blur', pauseAudio);
+  }
+
+  /* ---------- وضع ملء الشاشة ---------- */
+  function requestFullscreen() {
+    const el = document.documentElement;
+    try {
+      if (el.requestFullscreen) {
+        const p = el.requestFullscreen();
+        if (p && p.catch) p.catch(() => {});
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      }
+    } catch (e) { /* تجاهل أي منع لوضع ملء الشاشة */ }
+  }
+
   /* ---------- قلوب منبثقة عند النقر ---------- */
   function initClickHearts() {
     document.addEventListener('click', (e) => {
@@ -330,6 +367,8 @@
       for (let i = 0; i < 16; i++) setTimeout(() => spawnHeart(field), i * 60);
       // تأكد من أن الموسيقى تعمل (كخطة بديلة للتشغيل التلقائي)
       audio.play().then(() => setPlayingUI(true)).catch(() => {});
+      // الدخول في وضع ملء الشاشة (للمتصفحات التي تدعم ذلك)
+      requestFullscreen();
       setTimeout(() => {
         const tl = $('#timeline-section');
         tl.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -345,6 +384,7 @@
     initIntro();
     initReveal();
     initMusic();
+    initAppLifecycle();
     initClickHearts();
 
     // أسماء متساقطة في خلفية كامل التطبيق
