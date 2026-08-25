@@ -64,13 +64,21 @@
 
 أنا لكِ… كما لم أكن لأحد. ❤`;
 
+  /* ========= فهرس سريع للذكريات (id → index) =========
+     بدل findIndex في كل حلقة (O(n²)) نبني الخريطة مرة واحدة */
+  const idToIndex = new Map(memories.map((m, i) => [m.id, i]));
+
   /* ========= آلة كاتبة ========= */
   function typewriter(el, texts) {
     let txtIdx = 0;
     let charIdx = 0;
     let deleting = false;
+    let stopped = false;
 
     function tick() {
+      if (stopped) return;
+      // لا نضيّع المعالج والتذكّرات وهيئة الخلفية
+      if (document.hidden) { setTimeout(tick, 1000); return; }
       const current = texts[txtIdx];
       if (!deleting) {
         el.textContent = current.slice(0, ++charIdx);
@@ -89,6 +97,7 @@
       setTimeout(tick, deleting ? 40 : 80);
     }
     tick();
+    return { stop: () => { stopped = true; } };
   }
 
   /* ========= عدّاد الأيام ========= */
@@ -122,6 +131,7 @@
     const heroBoxes  = { d: $('#bDays'), h: $('#bHours'), m: $('#bMins'), s: $('#bSecs') };
 
     function update() {
+      if (document.hidden) return; // لا تحديث للعدّادات خلف الكواليس
       const t = timeSince(APP_CONFIG.startDate);
       // في العدّاد الكبير (البطل) نعرض التحديث الحي دائمًا
       if (heroBoxes.d) {
@@ -143,9 +153,11 @@
   }
 
   /* ========= بتلات ورد متساقطة ========= */
+  const MAX_PETALS = 14;
   function spawnPetal() {
     const field = $('#petals');
-    if (!field) return;
+    if (!field || document.hidden) return;
+    if (field.childElementCount >= MAX_PETALS) return; // حدّ أقصى لعدد الطبقات الحية
     const p = document.createElement('span');
     p.className = 'petal';
     p.style.left = (Math.random() * 100) + '%';
@@ -156,7 +168,7 @@
     const dur = 10 + Math.random() * 14;
     p.style.animationDuration = dur + 's';
     const hueShift = Math.random() * 30 - 15;
-    p.style.filter = `hue-rotate(${hueShift}deg) drop-shadow(0 2px 6px rgba(255,107,157,.5))`;
+    p.style.filter = `hue-rotate(${hueShift}deg)`; // بدون drop-shadow: أخفّ بكثير على الرسوميات
     field.appendChild(p);
     setTimeout(() => p.remove(), dur * 1000 + 200);
   }
@@ -175,9 +187,11 @@
   }
 
   /* ========= أسماء متساقطة خلفية ========= */
+  const MAX_BG_NAMES = 12;
   function spawnFloatingName() {
     const field = $('#bgNames');
-    if (!field) return;
+    if (!field || document.hidden) return;
+    if (field.childElementCount >= MAX_BG_NAMES) return;
     const s = document.createElement('span');
     const isEmoji = Math.random() < 0.35;
     if (isEmoji) {
@@ -222,11 +236,12 @@
     const wrap = $('#timeline');
     // نأخذ مجموعة مميزة من الذكريات (أولى، وسطى، أخيرة + كل 4)
     const featured = memories.filter((_, i) => i === 0 || i === memories.length - 1 || i % 4 === 0);
+    const frag = document.createDocumentFragment(); // إدراج جماعي = إعادة تصفيف واحدة
     featured.forEach((m, i) => {
       const row = document.createElement('div');
       row.className = 'tl-row reveal';
       row.style.transitionDelay = (i % 4) * 0.08 + 's';
-      const idx = memories.findIndex(x => x.id === m.id);
+      const idx = idToIndex.get(m.id);
       row.innerHTML = `
         <span class="tl-heart" aria-hidden="true">
           <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,10.5,11.4,16,21.2c5.2-9.5,16-12,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
@@ -244,18 +259,22 @@
           </div>
         </article>`;
       row.querySelector('.tl-photo').addEventListener('click', () => openLightbox(idx));
-      wrap.appendChild(row);
+      frag.appendChild(row);
     });
+    wrap.appendChild(frag);
   }
 
   /* ========= الألبومات ========= */
   function renderAlbums() {
     const wrap = $('#albums');
+    const frag = document.createDocumentFragment();
     albums.forEach((a, ai) => {
       const card = document.createElement('button');
       card.className = 'album-card reveal';
       card.style.transitionDelay = (ai % 3) * 0.08 + 's';
-      const covers = a.photos.slice(0, 4).map(id => memories.find(m => m.id === id)).filter(Boolean);
+      const covers = a.photos.slice(0, 4)
+        .map(id => { const i = idToIndex.get(id); return i === undefined ? undefined : memories[i]; })
+        .filter(Boolean);
       card.innerHTML = `
         <div class="album-cover">
           ${covers.map((m, ci) => `
@@ -268,8 +287,9 @@
           <p>${a.desc}</p>
         </div>`;
       card.addEventListener('click', () => openAlbum(ai));
-      wrap.appendChild(card);
+      frag.appendChild(card);
     });
+    wrap.appendChild(frag);
   }
 
   const albumView = $('#albumView');
@@ -282,9 +302,11 @@
     avTitle.textContent = `${a.emoji} ${a.name}`;
     avMeta.textContent = `${a.desc} — ${a.photos.length} صورة`;
     avGrid.innerHTML = '';
+    const frag = document.createDocumentFragment();
     a.photos.forEach((id) => {
-      const m = memories.find(x => x.id === id);
-      if (!m) return;
+      const i = idToIndex.get(id);
+      if (i === undefined) return;
+      const m = memories[i];
       const item = document.createElement('figure');
       item.className = 'av-item';
       const rot = (Math.random() * 8 - 4).toFixed(1);
@@ -292,12 +314,10 @@
       item.innerHTML = `
         <img src="${m.thumb}" data-full="${m.photo}" alt="${m.title}" loading="lazy">
         <figcaption>${m.title}</figcaption>`;
-      item.addEventListener('click', () => {
-        const idx = memories.findIndex(x => x.id === id);
-        openLightbox(idx);
-      });
-      avGrid.appendChild(item);
+      item.addEventListener('click', () => openLightbox(i));
+      frag.appendChild(item);
     });
+    avGrid.appendChild(frag);
     albumView.classList.add('open');
     albumView.setAttribute('aria-hidden','false');
     document.body.style.overflow = 'hidden';
@@ -313,6 +333,7 @@
   /* ========= معرض الصور ========= */
   function renderGallery() {
     const wrap = $('#gallery');
+    const frag = document.createDocumentFragment();
     memories.forEach((m, i) => {
       const fig = document.createElement('figure');
       fig.className = 'polaroid reveal';
@@ -325,8 +346,9 @@
           <span class="pol-date">${m.date}</span>
         </figcaption>`;
       fig.addEventListener('click', () => openLightbox(i));
-      wrap.appendChild(fig);
+      frag.appendChild(fig);
     });
+    wrap.appendChild(frag);
   }
 
   /* ========= Lightbox ========= */
@@ -387,6 +409,7 @@
   /* ========= بطاقات أسباب أحبك ========= */
   function renderReasons() {
     const wrap = $('#reasonsGrid');
+    const frag = document.createDocumentFragment();
     REASONS.forEach((r, i) => {
       const card = document.createElement('div');
       card.className = 'reason-card reveal';
@@ -410,13 +433,15 @@
           ), j * 70);
         }
       });
-      wrap.appendChild(card);
+      frag.appendChild(card);
     });
+    wrap.appendChild(frag);
   }
 
   /* ========= الوعود ========= */
   function renderPromises() {
     const wrap = $('#promises');
+    const frag = document.createDocumentFragment();
     PROMISES.forEach((p, i) => {
       const li = document.createElement('li');
       li.className = 'promise reveal';
@@ -438,8 +463,9 @@
           }
         }
       });
-      wrap.appendChild(li);
+      frag.appendChild(li);
     });
+    wrap.appendChild(frag);
   }
 
   /* ========= الرسالة ========= */
@@ -583,13 +609,13 @@
     const intro = $('#intro');
     const startBtn = $('#startBtn');
 
-    // آلة كاتبة
-    typewriter($('#typewriter'), QUOTES);
+    // آلة كاتبة (نوقفها بعد بدء القصة)
+    const tw = typewriter($('#typewriter'), QUOTES);
 
-    // قلوب متطايرة
+    // قلوب متطايرة (نوقف مولّدها بعد إخفاء المقدمة)
     const heartField = $('#introHearts');
     for (let i = 0; i < 8; i++) setTimeout(() => spawnFlyHeart(heartField), i * 400);
-    setInterval(() => spawnFlyHeart(heartField), 1400);
+    const heartTimer = setInterval(() => spawnFlyHeart(heartField), 1400);
 
     // زر ابدأ
     startBtn.addEventListener('click', () => {
@@ -597,6 +623,9 @@
       for (let i = 0; i < 24; i++) {
         setTimeout(() => spawnFlyHeart(heartField), i * 50);
       }
+      // إيقاف مولّدات المقدمة (لم تعد مطلوبة)
+      clearInterval(heartTimer);
+      tw.stop();
       // تشغيل الموسيقى
       audio.volume = 0.6;
       audio.play().then(() => setMusicUI(true)).catch(() => {});
@@ -615,32 +644,6 @@
     });
   }
 
-  /* ========= طلب Fullscreen عند النزول (للهواتف) ========= */
-  function initFullscreenOnScroll() {
-    let triggered = false;
-    window.addEventListener('scroll', () => {
-      if (triggered) return;
-      if (window.scrollY > 50) {
-        triggered = true;
-        try {
-          if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
-            // لا نجبر المستخدم؛ نكتفي بعدم الخطأ
-          }
-        } catch (_) {}
-      }
-    }, { passive: true });
-  }
-
-  /* ========= منع السحب الأفقي (احتياطي) ========= */
-  function initScrollGuard() {
-    document.addEventListener('touchmove', (e) => {
-      if (Math.abs(e.touches[0].clientX - (e.touches[0].clientX)) < 1) return;
-    }, { passive: true });
-    document.body.addEventListener('wheel', (e) => {
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && e.target.closest('.lightbox, .album-view')) return;
-    }, { passive: true });
-  }
-
   /* ========= التشغيل ========= */
   document.addEventListener('DOMContentLoaded', () => {
     seedStars();
@@ -654,8 +657,6 @@
     initMusic();
     initLifecycle();
     initClickHearts();
-    initFullscreenOnScroll();
-    initScrollGuard();
     startLiveCounters();
 
     // بتلات ورد مستمرة (كل 1.2 ثانية)

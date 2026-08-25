@@ -111,7 +111,7 @@ button { font-family: inherit; }
 .nebula {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  /* بدون blur: التدرّج الشعاعي ناعم أصلاً، والبرور على طبقات ضخمة مكلف جداً على الرسوميات */
   opacity: .55;
   animation: nebulaFloat 20s ease-in-out infinite alternate;
 }
@@ -153,7 +153,8 @@ button { font-family: inherit; }
   background: radial-gradient(circle at 30% 30%, var(--blush), var(--rose) 70%);
   border-radius: 150% 0 150% 0;
   opacity: 0;
-  filter: drop-shadow(0 2px 6px rgba(255,107,157,.5));
+  /* بدون drop-shadow: عناصر صغيرة كثيرة تتحرك باستمرار = أوفر بكثير */
+  will-change: transform, opacity;
   animation: petalFall linear forwards;
 }
 @keyframes petalFall {
@@ -237,8 +238,9 @@ button { font-family: inherit; }
 /* زجاج */
 .glass {
   background: linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  /* نصف قطر أصغر = أقل تكلفة على الهاتف، والمظهر شبه المتطابق */
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
   border: 1px solid var(--glass-border);
   border-radius: 28px;
   box-shadow: 0 25px 60px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.15);
@@ -280,7 +282,7 @@ button { font-family: inherit; }
   width: 900px; height: 900px;
   transform: translate(-50%,-50%);
   background: radial-gradient(circle, rgba(255,107,157,.25), rgba(200,162,255,.15) 40%, transparent 70%);
-  filter: blur(40px);
+  /* بدون blur: التدرّج ناعم أصلاً */
   animation: glowPulse 6s ease-in-out infinite alternate;
 }
 @keyframes glowPulse {
@@ -403,7 +405,7 @@ button { font-family: inherit; }
 }
 .counter-box {
   background: var(--glass);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: .7rem 1rem;
@@ -637,7 +639,7 @@ button { font-family: inherit; }
   position: absolute;
   inset: -30px;
   background: radial-gradient(circle, rgba(255,107,157,.4), transparent 65%);
-  filter: blur(25px);
+  /* بدون blur: التدرّج ناعم أصلاً */
   animation: auraPulse 3s ease-in-out infinite;
 }
 @keyframes auraPulse {
@@ -752,8 +754,9 @@ button { font-family: inherit; }
 
 .tl-card {
   background: var(--glass);
-  backdrop-filter: blur(18px) saturate(130%);
-  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  /* بلاور أصغر: بطاقات كثيرة في الشاشة الواحدة */
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
   border: 1px solid var(--glass-border);
   border-radius: 22px;
   overflow: hidden;
@@ -887,7 +890,7 @@ button { font-family: inherit; }
   border-radius: 6px;
   box-shadow: 0 8px 25px rgba(0,0,0,.45);
   background: var(--night-2);
-  transition: transform .5s cubic-bezier(.2,.8,.2,1), z-index .3s;
+  transition: transform .5s cubic-bezier(.2,.8,.2,1);
 }
 .album-card:hover .cov { z-index: 5; }
 .cov-0 { top: 8%;  right: 12%; transform: rotate(6deg); z-index: 3; }
@@ -930,8 +933,8 @@ button { font-family: inherit; }
 .album-view {
   position: fixed;
   inset: 0; z-index: 95;
+  /* بلا بلاور: الخلفية شبه معتمة (96%) فتأثيره شبه معدوم مقابل كلفته */
   background: linear-gradient(160deg, rgba(11,3,32,.96), rgba(45,11,82,.96));
-  backdrop-filter: blur(20px);
   display: none;
   flex-direction: column;
   align-items: center;
@@ -1120,8 +1123,8 @@ button { font-family: inherit; }
   overflow: hidden;
 }
 .reason-front {
-  background: linear-gradient(135deg, rgba(255,107,157,.2), rgba(200,162,255,.15));
-  backdrop-filter: blur(12px);
+  /* بدون backdrop-filter: 12 بطاقة × بلاور = عبء كبير؛ خلفية شبه شفافة تكفي */
+  background: linear-gradient(135deg, rgba(255,107,157,.3), rgba(200,162,255,.24));
   border: 1px solid var(--glass-border);
   box-shadow: 0 14px 35px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.15);
 }
@@ -1206,7 +1209,7 @@ button { font-family: inherit; }
   background: linear-gradient(160deg, #ffb0c8, #d96e94);
   clip-path: polygon(0 0, 100% 0, 50% 70%);
   transform-origin: top center;
-  transition: transform .9s cubic-bezier(.6,.05,.28,1), z-index .3s;
+  transition: transform .9s cubic-bezier(.6,.05,.28,1);
   box-shadow: 0 2px 8px rgba(0,0,0,.1);
 }
 .envelope.open .env-flap {
@@ -1218,7 +1221,7 @@ button { font-family: inherit; }
   display: grid;
   place-items: start center;
   padding: 1.2rem;
-  transition: transform 1.2s cubic-bezier(.2,.8,.3,1.2), z-index .3s;
+  transition: transform 1.2s cubic-bezier(.2,.8,.3,1.2);
 }
 .envelope.open .env-letter {
   transform: translateY(-45%) scale(1.1);
@@ -1321,12 +1324,12 @@ button { font-family: inherit; }
   align-items: center;
   gap: 1rem;
   padding: 1.1rem 1.4rem;
-  background: var(--glass);
-  backdrop-filter: blur(14px);
+  /* بلا بلاور: خلفية أوضح بدل الزجاج المكلف */
+  background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
   border: 1px solid var(--glass-border);
   border-radius: 999px;
   cursor: pointer;
-  transition: all .3s ease;
+  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
   font-size: 1rem;
   color: var(--cream);
   position: relative;
@@ -1356,7 +1359,7 @@ button { font-family: inherit; }
   display: grid; place-items: center;
   color: var(--rose);
   font-size: 1rem;
-  transition: all .3s ease;
+  transition: background .3s ease, color .3s ease, box-shadow .3s ease;
 }
 .promise.active .promise-check {
   background: var(--rose);
@@ -1438,8 +1441,8 @@ button { font-family: inherit; }
 .lightbox {
   position: fixed; inset: 0;
   z-index: 100;
+  /* بلا بلاور: الخلفية معتمة (94%) فيكفيها */
   background: rgba(11,3,32,.94);
-  backdrop-filter: blur(15px);
   display: none;
   align-items: center;
   justify-content: center;
@@ -1492,7 +1495,7 @@ button { font-family: inherit; }
   cursor: pointer;
   border-radius: 50%;
   display: grid; place-items: center;
-  transition: all .25s ease;
+  transition: transform .25s ease, background .25s ease, border-color .25s ease;
   z-index: 3;
 }
 .lb-close:hover, .lb-nav:hover {
@@ -1631,7 +1634,7 @@ button { font-family: inherit; }
   border-radius: 999px;
   opacity: 0;
   transform: translateY(10px);
-  transition: all .3s ease;
+  transition: opacity .3s ease, transform .3s ease;
   pointer-events: none;
 }
 .music-disc.playing ~ .now-playing,
