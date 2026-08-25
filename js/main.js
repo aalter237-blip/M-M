@@ -98,6 +98,74 @@
   /* ---------- معرض الصور ---------- */
   let galleryIndex = -1;
 
+  const thumbOf = (id) => `photos/thumbs/memory-${String(id).padStart(2, '0')}.jpg`;
+
+  /* ---------- الألبومات ---------- */
+  function renderAlbums() {
+    const wrap = $('#albums');
+    albums.forEach((a, ai) => {
+      const card = document.createElement('button');
+      card.className = 'album-card reveal';
+      card.style.transitionDelay = (ai % 3) * 0.08 + 's';
+      const covers = a.photos.slice(0, 4);
+      card.innerHTML = `
+        <div class="album-cover">
+          ${covers.map((id, ci) => `
+            <img src="${thumbOf(id)}" alt="" loading="lazy" class="cov cov-${ci}">`).join('')}
+          <span class="album-count">${a.photos.length} 💗</span>
+          <span class="album-open-hint">افتح الألبوم ❤</span>
+        </div>
+        <div class="album-info">
+          <h3>${a.emoji} ${a.name}</h3>
+          <p>${a.desc}</p>
+        </div>`;
+      card.addEventListener('click', () => openAlbum(ai));
+      wrap.appendChild(card);
+    });
+  }
+
+  const albumView = $('#albumView');
+  const avTitle = $('#avTitle');
+  const avMeta = $('#avMeta');
+  const avGrid = $('#avGrid');
+
+  function openAlbum(ai) {
+    const a = albums[ai];
+    avTitle.textContent = `${a.emoji} ${a.name}`;
+    avMeta.textContent = `${a.desc} — ${a.photos.length} صور`;
+    avGrid.innerHTML = '';
+    a.photos.forEach((id) => {
+      const m = memories.find(x => x.id === id);
+      if (!m) return;
+      const item = document.createElement('figure');
+      item.className = 'av-item';
+      const rot = (Math.random() * 5 - 2.5).toFixed(1);
+      item.style.transform = `rotate(${rot}deg)`;
+      item.innerHTML = `
+        <img src="${m.thumb}" data-full="${m.photo}" alt="${m.title}" loading="lazy">
+        <figcaption>${m.title}</figcaption>`;
+      item.addEventListener('click', () => {
+        const idx = memories.findIndex(x => x.id === id);
+        openLightbox(idx);
+      });
+      avGrid.appendChild(item);
+    });
+    albumView.classList.add('open');
+    albumView.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAlbum() {
+    albumView.classList.remove('open');
+    albumView.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  $('#avClose').addEventListener('click', closeAlbum);
+  albumView.addEventListener('click', (e) => { if (e.target === albumView) closeAlbum(); });
+
+  /* ---------- عارض الصور ---------- */
+
   function renderGallery() {
     const wrap = $('#gallery');
     memories.forEach((m, i) => {
@@ -169,24 +237,57 @@
   /* ---------- الموسيقى ---------- */
   const audio = $('#musicPlayer');
   const musicBtn = $('#musicBtn');
-  let musicStarted = false;
+
+  function setPlayingUI(on) {
+    musicBtn.classList.toggle('playing', on);
+    musicBtn.innerHTML = on
+      ? '<span class="eq"><i></i><i></i><i></i></span>'
+      : '🎵';
+    musicBtn.setAttribute('aria-label', on ? 'إيقاف الموسيقى' : 'تشغيل الموسيقى');
+  }
 
   function initMusic() {
+    // تشغيل تلقائي فور فتح التطبيق
+    const tryAutoplay = () => {
+      const p = audio.play();
+      if (p && p.then) {
+        p.then(() => setPlayingUI(true)).catch(() => {});
+      }
+    };
+    tryAutoplay();
+
+    // إذا منع المتصفح التشغيل التلقائي… نبدأ عند أول تفاعل في أي مكان
+    const unlock = () => tryAutoplay();
+    ['pointerdown', 'touchstart', 'keydown', 'scroll', 'wheel'].forEach((ev) => {
+      document.addEventListener(ev, unlock, { once: true, passive: true });
+    });
+
+    // زر التحكم اليدوي
     musicBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       if (audio.paused) {
-        audio.play().catch(() => {});
-        musicBtn.classList.add('playing');
-        musicBtn.innerHTML = '<span class="eq"><i></i><i></i><i></i></span>';
+        audio.play().then(() => setPlayingUI(true)).catch(() => {});
       } else {
         audio.pause();
-        musicBtn.classList.remove('playing');
-        musicBtn.innerHTML = '🎵';
+        setPlayingUI(false);
       }
     });
-    audio.addEventListener('ended', () => {
-      musicBtn.classList.remove('playing');
-      musicBtn.innerHTML = '🎵';
+    audio.addEventListener('pause', () => setPlayingUI(false));
+    audio.addEventListener('play', () => setPlayingUI(true));
+    audio.addEventListener('ended', () => setPlayingUI(false));
+  }
+
+  /* ---------- قلوب منبثقة عند النقر ---------- */
+  function initClickHearts() {
+    document.addEventListener('click', (e) => {
+      // لا نمنع القلب عند أي نقرة — فقط نتجنب التكرار الزائد داخل النوافذ
+      const h = document.createElement('span');
+      h.className = 'burst-heart';
+      h.textContent = HEART_EMOJIS[Math.floor(Math.random() * HEART_EMOJIS.length)];
+      h.style.left = (e.clientX - 12) + 'px';
+      h.style.top = (e.clientY - 12) + 'px';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 1400);
     });
   }
 
@@ -227,14 +328,8 @@
     startBtn.addEventListener('click', () => {
       intro.classList.add('hide');
       for (let i = 0; i < 16; i++) setTimeout(() => spawnHeart(field), i * 60);
-      // تشغيل أغنيتكما بعد تفاعل المستخدم (المتصفحات تمنع التشغيل التلقائي)
-      if (!musicStarted && audio) {
-        audio.play().then(() => {
-          musicStarted = true;
-          musicBtn.classList.add('playing');
-          musicBtn.innerHTML = '<span class="eq"><i></i><i></i><i></i></span>';
-        }).catch(() => {});
-      }
+      // تأكد من أن الموسيقى تعمل (كخطة بديلة للتشغيل التلقائي)
+      audio.play().then(() => setPlayingUI(true)).catch(() => {});
       setTimeout(() => {
         const tl = $('#timeline-section');
         tl.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -245,10 +340,12 @@
   /* ---------- إقلاع ---------- */
   document.addEventListener('DOMContentLoaded', () => {
     renderTimeline();
+    renderAlbums();
     renderGallery();
     initIntro();
     initReveal();
     initMusic();
+    initClickHearts();
 
     // أسماء متساقطة في خلفية كامل التطبيق
     const bgNames = $('#bgNames');

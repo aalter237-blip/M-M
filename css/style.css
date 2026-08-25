@@ -25,10 +25,14 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
-  background: var(--cream);
   color: var(--ink);
   overflow-x: hidden;
   line-height: 1.9;
+  background:
+    radial-gradient(1200px 800px at 85% -5%, rgba(201,111,132,.10), transparent 55%),
+    radial-gradient(1000px 700px at 5% 105%, rgba(212,175,55,.08), transparent 55%),
+    linear-gradient(180deg, #fffdfa, var(--cream) 45%, #fdf0f4 100%);
+  min-height: 100vh;
 }
 
 ::selection { background: var(--rose); color: #fff; }
@@ -330,6 +334,187 @@ img { display: block; max-width: 100%; }
   .tl-row { justify-content: flex-end !important; }
   .tl-dot { left: 12px; transform: translateX(50%); }
   .tl-card { width: calc(100% - 42px); }
+}
+
+/* ============ الألبومات ============ */
+.albums {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.8rem;
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.album-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: center;
+  font-family: var(--font-body);
+  transition: transform .35s ease;
+}
+.album-card:hover { transform: translateY(-8px); }
+
+.album-cover {
+  position: relative;
+  height: 240px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: linear-gradient(150deg, var(--wine-2), var(--wine));
+  transition: box-shadow .35s ease;
+}
+.album-card:hover .album-cover { box-shadow: 0 26px 55px rgba(92,10,30,.35); }
+
+.album-cover .cov {
+  position: absolute;
+  width: 52%;
+  height: 64%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35);
+  transition: transform .5s ease;
+}
+.album-card:hover .cov { transform: scale(1.06); }
+
+.cov-0 { top: 12%;  right: 8%;  transform: rotate(4deg);  z-index: 3; }
+.cov-1 { top: 12%;  left: 8%;   transform: rotate(-4deg); z-index: 2; }
+.cov-2 { bottom: 8%; right: 16%; transform: rotate(-6deg); z-index: 1; }
+.cov-3 { bottom: 8%; left: 16%;  transform: rotate(6deg);  z-index: 1; }
+
+.album-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(255,255,255,.10), transparent 40%, rgba(92,10,30,.25));
+  pointer-events: none;
+}
+
+.album-count {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(92,10,30,.85);
+  color: var(--gold-soft);
+  font-size: .78rem;
+  padding: .2rem .7rem;
+  border-radius: 999px;
+  z-index: 4;
+  backdrop-filter: blur(4px);
+}
+
+.album-open-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+  color: var(--wine-deep);
+  font-size: .8rem;
+  font-weight: 700;
+  padding: .3rem 1rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .3s ease, transform .3s ease;
+  z-index: 4;
+}
+.album-card:hover .album-open-hint { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.album-info h3 {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  color: var(--wine);
+  margin: .8rem 0 .25rem;
+}
+.album-info p { font-size: .88rem; color: #8d5a68; }
+
+/* ============ نافذة الألبوم ============ */
+.album-view {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  background: linear-gradient(160deg, rgba(61,5,18,.97), rgba(92,10,30,.97));
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity .35s ease;
+  padding: 4.5rem 1.2rem 3rem;
+}
+.album-view.open { display: flex; opacity: 1; }
+
+.av-header { text-align: center; margin-bottom: 2rem; }
+.av-header h3 {
+  font-family: var(--font-head);
+  font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+  color: var(--gold-soft);
+  margin-bottom: .3rem;
+}
+.av-header p { color: rgba(255,235,240,.75); font-size: .95rem; }
+
+.av-close {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 96;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.3);
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background .25s ease, transform .25s ease;
+}
+.av-close:hover { background: var(--rose); transform: scale(1.1) rotate(90deg); }
+
+.av-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+  max-width: 1080px;
+}
+
+.av-item {
+  width: 190px;
+  background: #fff;
+  padding: .45rem .45rem .7rem;
+  border-radius: 4px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.35);
+  cursor: pointer;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.av-item:hover { transform: rotate(0deg) scale(1.07) !important; box-shadow: 0 20px 45px rgba(0,0,0,.5); }
+.av-item img { width: 100%; height: 160px; object-fit: cover; border-radius: 2px; }
+.av-item figcaption {
+  font-family: var(--font-head);
+  font-size: .85rem;
+  color: var(--ink);
+  text-align: center;
+  padding-top: .5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============ قلوب منبثقة عند النقر ============ */
+.burst-heart {
+  position: fixed;
+  z-index: 999;
+  font-size: 1.3rem;
+  pointer-events: none;
+  animation: burstUp 1.3s ease-out forwards;
+  filter: drop-shadow(0 2px 6px rgba(92,10,30,.3));
+}
+@keyframes burstUp {
+  0%   { transform: translateY(0) scale(.5); opacity: 1; }
+  60%  { transform: translateY(-55px) scale(1.2); opacity: .95; }
+  100% { transform: translateY(-110px) scale(.7); opacity: 0; }
 }
 
 /* ============ معرض الصور ============ */

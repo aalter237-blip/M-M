@@ -6,7 +6,11 @@
   <meta name="theme-color" content="#5c0a1e">
   <meta name="description" content="ذكرياتنا — رحلة حبنا في صور ولحظات لا تُنسى">
   <title>M❤️M</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E❤️%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon/icon-192.png">
+  <link rel="apple-touch-icon" href="icon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon/icon-512.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=El+Messiri:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -47,8 +51,18 @@
     <div class="timeline" id="timeline"></div>
   </section>
 
+  <!-- ===== ألبومات الصور ===== -->
+  <section id="albums-section" class="section section-alt">
+    <div class="section-head reveal">
+      <span class="section-kicker">كنوزنا المصوّرة</span>
+      <h2 class="section-title">ألبومات حبّنا</h2>
+      <p class="section-desc">كل ألبوم حكاية… اضغط على الألبوم لتفتح كنوزه</p>
+    </div>
+    <div class="albums" id="albums"></div>
+  </section>
+
   <!-- ===== معرض الصور ===== -->
-  <section id="gallery-section" class="section section-alt">
+  <section id="gallery-section" class="section">
     <div class="section-head reveal">
       <span class="section-kicker">صور تحكي</span>
       <h2 class="section-title">معرض ذكرياتنا</h2>
@@ -88,8 +102,18 @@
     </div>
   </section>
 
+  <!-- ===== نافذة الألبوم ===== -->
+  <div class="album-view" id="albumView" aria-hidden="true">
+    <button class="av-close" id="avClose" aria-label="إغلاق الألبوم">✕</button>
+    <header class="av-header">
+      <h3 id="avTitle"></h3>
+      <p id="avMeta"></p>
+    </header>
+    <div class="av-grid" id="avGrid"></div>
+  </div>
+
   <!-- ===== مشغل الموسيقى ===== -->
-  <audio id="musicPlayer" src="audio/our-song.mp3" loop preload="none"></audio>
+  <audio id="musicPlayer" src="audio/our-song.mp3" loop preload="auto" autoplay></audio>
   <button id="musicBtn" class="music-btn" aria-label="تشغيل الموسيقى">🎵</button>
 
   <!-- ===== تذييل ===== -->
