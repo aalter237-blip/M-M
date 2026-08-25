@@ -1,0 +1,12 @@
+# اعتماديات Node.js
+node_modules/
+
+# مشروع أندرويد المُنشأ محلياً (يبنيه GitHub Actions تلقائياً)
+/android/
+.gradle/
+*.keystore
+*.jks
+
+# ملفات النظام
+.DS_Store
+Thumbs.db
