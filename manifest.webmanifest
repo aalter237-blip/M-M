@@ -1,15 +1,15 @@
 {
-  "name": "M❤️M — ذكرياتنا",
+  "name": "M❤️M — عالمنا الصغير",
   "short_name": "M❤️M",
-  "description": "تطبيق ذكرياتنا الرومانسي — صور ولحظات حب لا تُنسى",
+  "description": "تطبيق ذكرياتنا الرومانسي — حديقة ليلية مرصّعة بالنجوم بحبٍ لا ينتهي",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#3d0512",
-  "theme_color": "#5c0a1e",
+  "background_color": "#0b0320",
+  "theme_color": "#1a0633",
   "icons": [
     {
       "src": "icon/icon-192.png",
