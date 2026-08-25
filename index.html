@@ -2,15 +2,15 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#5c0a1e">
-  <meta name="description" content="ذكرياتنا — رحلة حبنا في صور ولحظات لا تُنسى">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1a0633">
+  <meta name="description" content="M❤️M — عالمنا الصغير، حيث ينبض القلب بحب لا ينتهي">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="M❤️M">
   <link rel="manifest" href="manifest.webmanifest">
-  <title>M❤️M</title>
+  <title>M❤️M — عالمنا الصغير</title>
   <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon-16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="icon/icon-192.png">
@@ -18,98 +18,201 @@
   <link rel="icon" type="image/png" sizes="512x512" href="icon/icon-512.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=El+Messiri:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=Great+Vibes&family=Dancing+Script:wght@500;700&family=Parisienne&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- ===== خلفية الأسماء المتساقطة (في كامل التطبيق) ===== -->
+  <!-- ===== خلفية مرصّعة بالنجوم + تدرّج ليلي ثابت ===== -->
+  <div class="cosmos" aria-hidden="true">
+    <div class="stars stars-s"></div>
+    <div class="stars stars-m"></div>
+    <div class="stars stars-l"></div>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+  </div>
+
+  <!-- بتلات ورد متساقطة (عشوائية) -->
+  <div class="petals-field" id="petals" aria-hidden="true"></div>
+
+  <!-- أسماء متساقطة خفيفة -->
   <div class="names-field" id="bgNames" aria-hidden="true"></div>
 
-  <!-- ===== شاشة البداية ===== -->
+  <!-- ===== شاشة البداية الأسطورية ===== -->
   <section id="intro">
-    <div class="names-field intro-names" aria-hidden="true"></div>
-    <div class="hearts-field" aria-hidden="true"></div>
-    <div class="intro-content">
-      <p class="intro-kicker">ذكرياتنا</p>
-      <h1 class="intro-title">M<span class="amp">❤️</span>M</h1>
-      <p class="intro-sub">كل لحظة معك تستحق أن تُخلَّد<br>في قلبٍ ينبض بالحكاية</p>
-      <div class="intro-stats">
-        <span class="stat"><b id="daysCount">0</b> يوم من الحب</span>
-        <span class="stat-sep">•</span>
-        <span class="stat"><b id="memoriesCount">0</b> ذكريات</span>
-        <span class="stat-sep">•</span>
-        <span class="stat"><b>∞</b> ابتسامة</span>
+    <div class="intro-glow" aria-hidden="true"></div>
+    <div class="intro-hearts" id="introHearts" aria-hidden="true"></div>
+
+    <div class="intro-inner">
+      <p class="intro-eyebrow">عالمنا الصغير</p>
+      <h1 class="intro-title">
+        <span class="it-name her" data-text="مزن">مزن</span>
+        <span class="it-heart" aria-hidden="true">
+          <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,10.5,11.4,16,21.2c5.2-9.5,16-12,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+        </span>
+        <span class="it-name his" data-text="محمد">محمد</span>
+      </h1>
+
+      <p class="intro-quote">
+        <span id="typewriter"></span><span class="cursor">|</span>
+      </p>
+
+      <div class="counter">
+        <div class="counter-box"><b id="cDays">0</b><span>يوماً</span></div>
+        <div class="counter-dot">·</div>
+        <div class="counter-box"><b id="cHours">0</b><span>ساعة</span></div>
+        <div class="counter-dot">·</div>
+        <div class="counter-box"><b id="cMins">0</b><span>دقيقة</span></div>
+        <div class="counter-dot">·</div>
+        <div class="counter-box"><b id="cSecs">0</b><span>ثانية</span></div>
       </div>
-      <button id="startBtn" class="start-btn">ابدأ رحلتنا <span>❤</span></button>
-      <div class="scroll-hint">انزل إلى أعماق الحكاية</div>
+      <p class="counter-label">منذ أن صار قلبي لكِ/لكَ 🕊️</p>
+
+      <button id="startBtn" class="start-btn">
+        <span class="sb-label">ادخلي قصتنا</span>
+        <span class="sb-heart">❤</span>
+      </button>
+
+      <div class="scroll-hint">
+        <span>مرّري للأسفل</span>
+        <div class="scroll-line"><span></span></div>
+      </div>
     </div>
   </section>
 
-  <!-- ===== الخط الزمني ===== -->
+  <!-- ===== قسم العدّاد الكبير (بعد الدخول) ===== -->
+  <section id="hero-section" class="section hero-section">
+    <div class="hero-card glass reveal">
+      <div class="hero-left">
+        <p class="eyebrow">أنتِ حكايتي التي</p>
+        <h2 class="hero-title">كل ثانية معكِ<br><em>عمرٌ ثانٍ</em></h2>
+        <p class="hero-sub">في كل مرة ينبض قلبي فيها، ينبض لكِ. ومنذ أول يوم جمعتنا الأقدار، صار للوقت طعم آخر — طعم الورد ولمسة النجوم.</p>
+        <div class="big-counter">
+          <div class="bc-item"><b id="bDays">0</b><span>يوم</span></div>
+          <div class="bc-item"><b id="bHours">0</b><span>ساعة</span></div>
+          <div class="bc-item"><b id="bMins">0</b><span>دقيقة</span></div>
+          <div class="bc-item"><b id="bSecs">0</b><span>ثانية</span></div>
+        </div>
+        <p class="hero-foot">وكل ثانية قادمة… هي أيضًا لكِ.</p>
+      </div>
+      <div class="hero-right">
+        <div class="heart-frame">
+          <div class="hf-aura"></div>
+          <div class="hf-ring hf-r1"></div>
+          <div class="hf-ring hf-r2"></div>
+          <div class="hf-ring hf-r3"></div>
+          <svg class="hf-heart" viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,10.5,11.4,16,21.2c5.2-9.5,16-12,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+          <img src="photos/memory-20.jpg" alt="قلب حب" class="hf-img">
+        </div>
+        <p class="hf-cap">قلبٌ واحد… ونبضٌ واحد ❤</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== قصة لقائنا (خط زمني على شكل قلب) ===== -->
   <section id="timeline-section" class="section">
     <div class="section-head reveal">
-      <span class="section-kicker">رحلة عمر</span>
-      <h2 class="section-title">حكايتنا يوماً بيوم</h2>
-      <p class="section-desc">من أول نظرة إلى كل نبضة… هذه لحظاتنا التي لا تشيخ</p>
+      <p class="eyebrow">✦ حكايتنا ✦</p>
+      <h2 class="section-title">نبضاتٌ لا تنسى</h2>
+      <p class="section-desc">من أول همسة… إلى آخر نظرة. كل لحظة هنا محفورة في القلب.</p>
     </div>
     <div class="timeline" id="timeline"></div>
   </section>
 
-  <!-- ===== ألبومات الصور ===== -->
-  <section id="albums-section" class="section section-alt">
+  <!-- ===== ألبوماتنا (بطاقات زجاجية بأربعة صور متداخلة) ===== -->
+  <section id="albums-section" class="section">
     <div class="section-head reveal">
-      <span class="section-kicker">كنوزنا المصوّرة</span>
-      <h2 class="section-title">ألبومات حبّنا</h2>
-      <p class="section-desc">كل ألبوم حكاية… اضغط على الألبوم لتفتح كنوزه</p>
+      <p class="eyebrow">✦ كنوزنا ✦</p>
+      <h2 class="section-title">ألبوماتنا</h2>
+      <p class="section-desc">كل ألبوم حكاية… اضغطي عليه لتفتح لكِ أبواب الذكرى</p>
     </div>
     <div class="albums" id="albums"></div>
   </section>
 
-  <!-- ===== معرض الصور ===== -->
+  <!-- ===== معرض الصور (حبل الغسيل مع مشابك) ===== -->
   <section id="gallery-section" class="section">
     <div class="section-head reveal">
-      <span class="section-kicker">صور تحكي</span>
-      <h2 class="section-title">معرض ذكرياتنا</h2>
-      <p class="section-desc">اضغط على أي صورة لتتأملها عن قرب</p>
+      <p class="eyebrow">✦ لحظاتنا ✦</p>
+      <h2 class="section-title">معلّقة في سماء الذاكرة</h2>
+      <p class="section-desc">كل صورة مشبكٌ من نور… يعلّق لحظةً جميلة في حبل أيامنا</p>
     </div>
+    <div class="clothesline" aria-hidden="true"></div>
     <div class="gallery" id="gallery"></div>
   </section>
 
-  <!-- ===== الرسالة ===== -->
+  <!-- ===== أسباب أحبكِ (بطاقات تقليب ثلاثي الأبعاد) ===== -->
+  <section id="reasons-section" class="section">
+    <div class="section-head reveal">
+      <p class="eyebrow">✦ قائمة الحب ✦</p>
+      <h2 class="section-title">لماذا أحبك؟</h2>
+      <p class="section-desc">ألف سبب… وألف سبب. اضغطي أي بطاقة لتعرفي سرّها 💌</p>
+    </div>
+    <div class="reasons-grid" id="reasonsGrid"></div>
+  </section>
+
+  <!-- ===== رسالة حب (ظرف ورسالة) ===== -->
   <section id="letter-section" class="section">
     <div class="section-head reveal">
-      <span class="section-kicker">كلام القلب</span>
-      <h2 class="section-title">رسالة من القلب</h2>
-      <p class="section-desc">شيءٌ كتبته لك… من أعماقي</p>
+      <p class="eyebrow">✦ رسالة من القلب ✦</p>
+      <h2 class="section-title">رسالتي إليكِ…</h2>
+      <p class="section-desc">كتبتها بيدي… وحبرها من دمي. افتحيها حين يشتاق قلبكِ.</p>
     </div>
     <div class="envelope-wrap reveal" id="envelopeWrap">
       <div class="envelope" id="envelope">
         <div class="env-back"></div>
         <div class="env-letter" id="envLetter">
           <div class="letter-paper">
-            <div class="letter-header">إلى أعز إنسان في قلبي</div>
-            <div class="letter-body">
-              منذ أن أصبحتَ أنت في حياتي، تغيّر كل شيء.
-              صارت الأيام أجمل، والليالي أسهر، والقلب أطهر.
-              كل صباح يبدأ بذكراك، وكل مساء ينتهي بحلمٍ بك.
-              كلماتي لن تكفيك، لكن قلبي يهمس لك دائماً…
-              أحبك، وأحبك، وسأحبك.
+            <div class="letter-top">
+              <span class="lt-heart">❤</span>
+              <span class="lt-line"></span>
+              <span class="lt-heart">❤</span>
             </div>
-            <div class="letter-sign">أنا — لك دائماً ❤️<br><span class="letter-monogram">M❤️M</span></div>
+            <div class="letter-head">إلى من سكنت القلب…</div>
+            <div class="letter-body" id="letterBody"></div>
+            <div class="letter-sign">
+              <div>المخلص لكِ إلى الأبد،</div>
+              <div class="letter-name">M <span>❤</span> M</div>
+            </div>
           </div>
         </div>
         <div class="env-flap" id="envFlap"></div>
         <div class="env-front"></div>
-        <button class="env-seal" id="envSeal" aria-label="افتح الرسالة">M❤️M</button>
+        <button class="env-seal" id="envSeal" aria-label="افتح الرسالة">
+          <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,10.5,11.4,16,21.2c5.2-9.5,16-12,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+        </button>
       </div>
-      <p class="envelope-hint" id="envelopeHint">اضغط على الختم الأحمر لفتح الرسالة 💌</p>
+      <p class="envelope-hint" id="envelopeHint">اضغطي على الختم الأحمر 💌</p>
+    </div>
+  </section>
+
+  <!-- ===== وعودي لكِ (وعود مع قلوب قابلة للنقر) ===== -->
+  <section id="promises-section" class="section">
+    <div class="section-head reveal">
+      <p class="eyebrow">✦ عهود ✦</p>
+      <h2 class="section-title">وعودٌ أقطعها على نفسي</h2>
+      <p class="section-desc">اضغطي على أي وعدٍ ليخفق له القلب ❤</p>
+    </div>
+    <ul class="promises" id="promises"></ul>
+  </section>
+
+  <!-- ===== زر إرسال قبلة (تفاعل إرسال قلوب للأعلى) ===== -->
+  <section class="section kiss-section">
+    <div class="kiss-card glass reveal">
+      <h3>أرسلي لي قبلةً طائرة</h3>
+      <p>اضغطي على القلب الكبير… وسأسمع دقاته أينما كنتُ.</p>
+      <button id="kissBtn" class="kiss-btn" aria-label="أرسل قبلة">
+        <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,10.5,11.4,16,21.2c5.2-9.5,16-12,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+        <span class="kiss-pulse"></span>
+        <span class="kiss-pulse kiss-pulse-2"></span>
+      </button>
+      <p class="kiss-count">أرسلتِ <b id="kissCount">0</b> قبلة حتى الآن 💋</p>
     </div>
   </section>
 
   <!-- ===== نافذة الألبوم ===== -->
   <div class="album-view" id="albumView" aria-hidden="true">
-    <button class="av-close" id="avClose" aria-label="إغلاق الألبوم">✕</button>
+    <button class="av-close" id="avClose" aria-label="إغلاق">✕</button>
     <header class="av-header">
       <h3 id="avTitle"></h3>
       <p id="avMeta"></p>
@@ -117,28 +220,43 @@
     <div class="av-grid" id="avGrid"></div>
   </div>
 
-  <!-- ===== مشغل الموسيقى ===== -->
-  <audio id="musicPlayer" src="audio/our-song.mp3" loop preload="auto" autoplay></audio>
-  <button id="musicBtn" class="music-btn" aria-label="تشغيل الموسيقى">🎵</button>
-
-  <!-- ===== تذييل ===== -->
-  <footer>
-    <div class="footer-heart">❤</div>
-    <p>صُنع بحبّ… لأجلك أنت، ولذكرى كل لحظة جمعتنا</p>
-    <p class="footer-sub">M❤️M — حكاية لا تنتهي</p>
-  </footer>
+  <!-- ===== مشغل الموسيقى (فينيل دوّار) ===== -->
+  <audio id="musicPlayer" src="audio/our-song.mp3" loop preload="auto"></audio>
+  <button id="musicBtn" class="music-disc" aria-label="تشغيل الموسيقى">
+    <div class="disc-outer">
+      <div class="disc-vinyl">
+        <div class="disc-grooves"></div>
+        <div class="disc-label">
+          <span>M</span><span>❤</span><span>M</span>
+        </div>
+        <div class="disc-hole"></div>
+      </div>
+    </div>
+    <div class="disc-tonearm"></div>
+  </button>
+  <p id="nowPlaying" class="now-playing" aria-hidden="true">🎵 أغنيتنا…</p>
 
   <!-- ===== عارض الصور ===== -->
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <button class="lb-close" id="lbClose" aria-label="إغلاق">✕</button>
-    <button class="lb-nav lb-prev" id="lbPrev" aria-label="السابق">&#10094;</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="السابق">‹</button>
     <figure class="lb-stage">
       <img id="lbImg" src="" alt="">
       <figcaption id="lbCaption"></figcaption>
     </figure>
-    <button class="lb-nav lb-next" id="lbNext" aria-label="التالي">&#10095;</button>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="التالي">›</button>
     <div class="lb-counter" id="lbCounter"></div>
+    <div class="lb-hearts" id="lbHearts" aria-hidden="true"></div>
   </div>
+
+  <!-- ===== تذييل ===== -->
+  <footer class="footer">
+    <div class="footer-moon" aria-hidden="true">🌙</div>
+    <div class="footer-title">M<span>❤</span>M</div>
+    <p class="footer-text">صُنع بيدٍ ترتجف حبًا… لأجلكِ أنتِ وحدكِ.</p>
+    <p class="footer-sub">حكايتنا مستمرة… والنجمة تشهد ✨</p>
+    <div class="footer-line"></div>
+  </footer>
 
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
