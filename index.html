@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#5c0a1e">
+  <meta name="description" content="ذكرياتنا — رحلة حبنا في صور ولحظات لا تُنسى">
+  <title>ذكرياتنا ❤️</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E❤️%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=El+Messiri:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== شاشة البداية ===== -->
+  <section id="intro">
+    <div class="hearts-field" aria-hidden="true"></div>
+    <div class="intro-content">
+      <div class="monogram">M <span class="amp">&amp;</span> M</div>
+      <h1 class="intro-title">ذكرياتنا</h1>
+      <p class="intro-sub">كل لحظة معك تستحق أن تُخلَّد<br>في قلبٍ ينبض بالحكاية</p>
+      <div class="intro-stats">
+        <span class="stat"><b id="daysCount">0</b> يوم من الحب</span>
+        <span class="stat-sep">•</span>
+        <span class="stat"><b id="memoriesCount">0</b> ذكريات</span>
+        <span class="stat-sep">•</span>
+        <span class="stat"><b>∞</b> ابتسامة</span>
+      </div>
+      <button id="startBtn" class="start-btn">ابدأ رحلتنا <span>❤</span></button>
+      <div class="scroll-hint">انزل إلى أعماق الحكاية</div>
+    </div>
+  </section>
+
+  <!-- ===== الخط الزمني ===== -->
+  <section id="timeline-section" class="section">
+    <div class="section-head reveal">
+      <span class="section-kicker">رحلة عمر</span>
+      <h2 class="section-title">حكايتنا يوماً بيوم</h2>
+      <p class="section-desc">من أول نظرة إلى كل نبضة… هذه لحظاتنا التي لا تشيخ</p>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <!-- ===== معرض الصور ===== -->
+  <section id="gallery-section" class="section section-alt">
+    <div class="section-head reveal">
+      <span class="section-kicker">صور تحكي</span>
+      <h2 class="section-title">معرض ذكرياتنا</h2>
+      <p class="section-desc">اضغط على أي صورة لتتأملها عن قرب</p>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <!-- ===== الرسالة ===== -->
+  <section id="letter-section" class="section">
+    <div class="section-head reveal">
+      <span class="section-kicker">كلام القلب</span>
+      <h2 class="section-title">رسالة من القلب</h2>
+      <p class="section-desc">شيءٌ كتبته لك… من أعماقي</p>
+    </div>
+    <div class="envelope-wrap reveal" id="envelopeWrap">
+      <div class="envelope" id="envelope">
+        <div class="env-back"></div>
+        <div class="env-letter" id="envLetter">
+          <div class="letter-paper">
+            <div class="letter-header">إلى أعز إنسان في قلبي</div>
+            <div class="letter-body">
+              منذ أن أصبحتَ أنت في حياتي، تغيّر كل شيء.
+              صارت الأيام أجمل، والليالي أسهر، والقلب أطهر.
+              كل صباح يبدأ بذكراك، وكل مساء ينتهي بحلمٍ بك.
+              كلماتي لن تكفيك، لكن قلبي يهمس لك دائماً…
+              أحبك، وأحبك، وسأحبك.
+            </div>
+            <div class="letter-sign">أنا — لك دائماً ❤️<br><span class="letter-monogram">M &amp; M</span></div>
+          </div>
+        </div>
+        <div class="env-flap" id="envFlap"></div>
+        <div class="env-front"></div>
+        <button class="env-seal" id="envSeal" aria-label="افتح الرسالة">M&amp;M</button>
+      </div>
+      <p class="envelope-hint" id="envelopeHint">اضغط على الختم الأحمر لفتح الرسالة 💌</p>
+    </div>
+  </section>
+
+  <!-- ===== مشغل الموسيقى ===== -->
+  <audio id="musicPlayer" src="audio/our-song.mp3" loop preload="none"></audio>
+  <button id="musicBtn" class="music-btn" aria-label="تشغيل الموسيقى">🎵</button>
+
+  <!-- ===== تذييل ===== -->
+  <footer>
+    <div class="footer-heart">❤</div>
+    <p>صُنع بحبّ… لأجلك أنت، ولذكرى كل لحظة جمعتنا</p>
+    <p class="footer-sub">M &amp; M — حكاية لا تنتهي</p>
+  </footer>
+
+  <!-- ===== عارض الصور ===== -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lb-close" id="lbClose" aria-label="إغلاق">✕</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="السابق">&#10094;</button>
+    <figure class="lb-stage">
+      <img id="lbImg" src="" alt="">
+      <figcaption id="lbCaption"></figcaption>
+    </figure>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="التالي">&#10095;</button>
+    <div class="lb-counter" id="lbCounter"></div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
